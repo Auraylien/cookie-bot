@@ -35,6 +35,8 @@ client.on('message', message => {
           'avatar                     : affiche ton avatar en grand\n' +
           'avatar <@qqn>              : affiche l\'avatar de qqn\n' +
           'sexe                       : commande spéciale pour AA\n' +
+          'gif                        : envoie un gif aléatoire\n' +
+          'gif <mot-clef>             : envoie un gif ayant comme tag mot-clef\n' +
           '\n' +
           'Le bot réagira également si l\'un des mots suivant est détecté :\n' +
           '- tabia' +
@@ -74,13 +76,33 @@ client.on('message', message => {
 
 	  // API GIPHY
 	  if (message.content.toLowerCase().startsWith(prefix + 'gif')) {
-      Axios.get('http://api.giphy.com/v1/gifs/random', {
-        headers: { 'api_key': api_key_giphy }
-      }).then((response) => {
-        message.channel.send(response['data']['data']['url'])
-      }, (response) => {
-        console.log('Erreur').catch(err => console.logs(err))
-      })
+
+      // Regarde si la commande possède un argument
+      let count = message.content.toLowerCase().split(' ').length
+
+      if (count >= 2) {
+
+        let arg = message.content.toLowerCase().split(' ')[1]
+
+        Axios.get('http://api.giphy.com/v1/gifs/random?tag=' + arg, {
+          headers: { 'api_key': api_key_giphy }
+        }).then((response) => {
+          message.channel.send(response['data']['data']['url'])
+        }, (response) => {
+          console.log('Erreur')
+        })
+
+      } else {
+
+        Axios.get('http://api.giphy.com/v1/gifs/random', {
+          headers: { 'api_key': api_key_giphy }
+        }).then((response) => {
+          message.channel.send(response['data']['data']['url'])
+        }, (response) => {
+          console.log('Erreur').catch(err => console.logs(err))
+        })
+
+      }
     }
 
     // Commande avec mention(s)
