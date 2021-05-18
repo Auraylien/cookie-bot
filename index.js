@@ -40,6 +40,9 @@ client.on('message', message => {
           '\n' +
           'Le bot réagira également si l\'un des mots suivant est détecté :\n' +
           '- tabia' +
+          '- mdr' +
+          '- issou' +
+          '- funny boy' +
           '```'
         )
       }
@@ -165,6 +168,22 @@ client.on("message", message => {
     // Tabia
     if (message.content.toLowerCase().includes("tabia")) {
       message.channel.send("Maaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah... *clac de souris*")
+      message.react(message.guild.emojis.cache.get('832303476746616873')).then(console.log).catch(console.error)
+    }
+
+    // Funny boy
+    if (message.content.toLowerCase().includes("funny boy")) {
+      message.react('🤪').then(console.log).catch(console.error);
+    }
+
+    // Mdr
+    if (message.content.toLowerCase().includes("mdr")) {
+      message.react('😂').then(console.log).catch(console.error);
+    }
+
+    // Issou
+    if (message.content.toLowerCase().includes("issou")) {
+      message.react(message.guild.emojis.cache.get('832303469314048000')).then(console.log).catch(console.error);
     }
 
   }
