@@ -39,10 +39,11 @@ client.on('message', message => {
           'gif <mot-clef>             : envoie un gif ayant comme tag mot-clef\n' +
           '\n' +
           'Le bot réagira également si l\'un des mots suivant est détecté :\n' +
-          '- tabia' +
-          '- mdr' +
-          '- issou' +
-          '- funny boy' +
+          '- tabia\n' +
+          '- mdr\n' +
+          '- issou\n' +
+          '- funny boy\n' +
+          '- funny girl' +
           '```'
         )
       }
@@ -168,7 +169,6 @@ client.on("message", message => {
     // Tabia
     if (message.content.toLowerCase().includes("tabia")) {
       message.channel.send("Maaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah... *clac de souris*")
-      message.react(message.guild.emojis.cache.get('832303476746616873')).then(console.log).catch(console.error)
     }
 
     // Funny boy
@@ -176,10 +176,15 @@ client.on("message", message => {
       message.react('🤪').then(console.log).catch(console.error);
     }
 
-    // Mdr
-    if (message.content.toLowerCase().includes("mdr")) {
-      message.react('😂').then(console.log).catch(console.error);
+    // Funny girl
+    if (message.content.toLowerCase().includes("funny girl")) {
+      message.react('🤪').then(console.log).catch(console.error);
     }
+
+    // Mdr
+    // if (message.content.toLowerCase().includes("mdr")) {
+    //   message.react('😂').then(console.log).catch(console.error);
+    // }
 
     // Issou
     if (message.content.toLowerCase().includes("issou")) {
