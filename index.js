@@ -1,15 +1,29 @@
 const Discord = require('discord.js');
 const Axios = require('axios').default;
-const client = new Discord.Client({presence: {activity: {name: 'préparer des cookies', type: 'PLAYING'}}});
-const token = ''
-const api_key_giphy = ''
+const csv = require('fast-csv');
+const fs = require('fs');
+const client = new Discord.Client({presence: {activity: {name: 'préparer des cookies', type: 'PLAYING'}}, intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES]});
+const token = 'ODM0NDY5MTU5MTQ4MDYwNzQ1.YIBV9w.8ujwxDIYmPeV13Bvl7CYFez_hZA'
+const api_key_giphy = 'WkztmL4FSiUoeIfYxHsRVloqDV0w0n8l'
 const prefix = '?'
+const nombrePokemons = 898
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 
 client.once('ready', () => {
    console.log('Le bot a été lancé.');
 });
 
 client.login(token);
+
+const pokemons = [];
+
+csv.parseFile('pokemon.csv', { headers: false })
+  .on("data", row => {
+    pokemons.push(row)
+  })
 
 // Commandes
 client.on('message', message => {
@@ -18,7 +32,7 @@ client.on('message', message => {
   if (!message.author.bot) {
 
     // Commande classique sans mention
-    if (message.mentions.users.array().length === 0) {
+    if (message.mentions.users.size === 0) {
 
       // Help
       if (message.content.toLowerCase().startsWith(prefix + 'help')) {
@@ -37,10 +51,10 @@ client.on('message', message => {
           'sexe                       : commande spéciale pour AA\n' +
           'gif                        : envoie un gif aléatoire\n' +
           'gif <mot-clef>             : envoie un gif ayant comme tag mot-clef\n' +
+          'pokemon                    : invoque un Pokémon au hasard parmis les 898 Pokémons (1G-8G). 1 chance sur 20 qu\'il soit chromatique\n' +
           '\n' +
           'Le bot réagira également si l\'un des mots suivant est détecté :\n' +
           '- tabia\n' +
-          '- mdr\n' +
           '- issou\n' +
           '- funny boy\n' +
           '- funny girl' +
@@ -76,6 +90,63 @@ client.on('message', message => {
       // Issou
       if (message.content.toLowerCase().startsWith(prefix + 'issou')) {
         message.channel.send('https://tenor.com/view/issou-drole-marrant-rire-rigoler-gif-6142116')
+      }
+
+      // test Pokémon
+      if (message.content.toLowerCase().startsWith(prefix + 'pokemon')) {
+        let idPoke = getRandomInt(nombrePokemons) + 1;
+        let fabuleux = pokemons[idPoke][17];
+        let legendaire = pokemons[idPoke][18];
+        let ultraChimere = pokemons[idPoke][19];
+        let numShiny = getRandomInt(20) + 1;
+        let texte;
+        let img;
+
+        if (fabuleux == 1) {
+          if (numShiny != 20) {
+            texte = 'Un fabuleux **' + pokemons[idPoke][14] + '** a été invoqué !';
+          } else {
+            texte = ':sparkles: Un fabuleux **' + pokemons[idPoke][14] + ' chromatique** a été invoqué ! :sparkles:';
+          }
+        } else if (legendaire == 1) {
+          if (numShiny != 20) {
+            texte = 'Un légendaire **' + pokemons[idPoke][14] + '** a été invoqué !';
+          } else {
+            texte = ':sparkles: Un légendaire **' + pokemons[idPoke][14] + ' chromatique** a été invoqué ! :sparkles:';
+          }
+        } else if (ultraChimere == 1) {
+          if (numShiny != 20) {
+            texte = 'Une ultra-chimère **' + pokemons[idPoke][14] + '** a été invoquée !';
+          } else {
+            texte = ':sparkles: Une ultra-chimère **' + pokemons[idPoke][14] + ' chromatique** a été invoquée ! :sparkles:';
+          }
+        } else {
+          if (numShiny != 20) {
+            texte = 'Un **' + pokemons[idPoke][14] + '** a été invoqué !';
+          } else {
+            texte = ':sparkles: Un **' + pokemons[idPoke][14] + ' chromatique** a été invoqué ! :sparkles:';
+          }
+        }
+
+        if (numShiny != 20) {
+          message.channel.send({
+            content: texte,
+            files: [{
+              attachment: 'img_poke/normal/' + parseInt(idPoke) + '.png',
+              name: pokemons[idPoke][14] + '.png',
+              description: 'Image du Pokémon ' + pokemons[idPoke][14]
+            }]
+          })
+        } else {
+          message.channel.send({
+            content: texte,
+            files: [{
+              attachment: 'img_poke/shiny/' + parseInt(idPoke) + '.png',
+              name: pokemons[idPoke][14] + '.png',
+              description: 'Image du Pokémon ' + pokemons[idPoke][14] + ' chromatique'
+            }]
+          })
+        }
       }
 
 	  // API GIPHY
@@ -116,7 +187,7 @@ client.on('message', message => {
       let author = message.author
 
       // 1 seule mention
-      if (message.mentions.users.array().length === 1) {
+      if (message.mentions.users.size === 1) {
 
         // mention : User
         let mention = message.mentions.users.first()
