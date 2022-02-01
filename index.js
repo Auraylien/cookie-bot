@@ -3,8 +3,8 @@ const Axios = require('axios').default;
 const csv = require('fast-csv');
 const fs = require('fs');
 const client = new Discord.Client({presence: {activity: {name: 'préparer des cookies', type: 'PLAYING'}}, intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES]});
-const token = 'ODM0NDY5MTU5MTQ4MDYwNzQ1.YIBV9w.mg_7nTvLEwcielwahiUtJ0qI_kU'
-const api_key_giphy = 'WkztmL4FSiUoeIfYxHsRVloqDV0w0n8l'
+const token = ''
+const api_key_giphy = ''
 const prefix = '?'
 const nombrePokemons = 898
 
@@ -46,6 +46,7 @@ client.on('message', message => {
           'cookie <@moi>              : s\'offrir un cookie\n' +
           'cookie <@qqn1> <@qqn2> ... : fête de cookies !!\n' +
           'lea                        : affiche le GIF de Lea\n' +
+          'dlb                        : affiche le GIF de DLB\n' +
           'avatar                     : affiche ton avatar en grand\n' +
           'avatar <@qqn>              : affiche l\'avatar de qqn\n' +
           'sexe                       : commande spéciale pour AA\n' +
@@ -77,6 +78,11 @@ client.on('message', message => {
         message.channel.send('https://media.discordapp.net/attachments/801099428332699709/808096306744655872/Lea_et_son_placard.gif')
       }
 
+      // DLB
+      if (message.content.toLowerCase().startsWith(prefix + 'dlb')) {
+        message.channel.send('https://media.discordapp.net/attachments/632239527745945606/930919265043886180/vous_ne_me_meritez_pas.gif')
+      }
+
       // Avatar
       if (message.content.toLowerCase().startsWith(prefix + 'avatar')) {
         message.channel.send(message.author.displayAvatarURL({'format': 'png', 'dynamic': true, 'size': 2048}));
@@ -92,7 +98,7 @@ client.on('message', message => {
         message.channel.send('https://tenor.com/view/issou-drole-marrant-rire-rigoler-gif-6142116')
       }
 
-      // test Pokémon
+      // Pokémon
       if (message.content.toLowerCase().startsWith(prefix + 'pokemon')) {
         let idPoke = getRandomInt(nombrePokemons) + 1;
         let fabuleux = pokemons[idPoke][17];
