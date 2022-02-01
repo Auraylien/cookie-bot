@@ -8,6 +8,11 @@ const api_key_giphy = ''
 const prefix = '?'
 const nombrePokemons = 898
 
+// Params API YouTube
+const api_youtube = ''
+const dekuNoSekaiID = ''
+const maxResultYtb = 50 // 0-50
+
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
@@ -52,6 +57,8 @@ client.on('message', message => {
           'sexe                       : commande spéciale pour AA\n' +
           'gif                        : envoie un gif aléatoire\n' +
           'gif <mot-clef>             : envoie un gif ayant comme tag mot-clef\n' +
+          'ytb                        : envoie une vidéo au hasard de ma chaîne Youtube' +
+          'ytb <mot-clef>             : envoie une vidéo de ma chaîne en rapport avec le mot-clef' +
           'pokemon                    : invoque un Pokémon au hasard parmis les 898 Pokémons (1G-8G). 1 chance sur 20 qu\'il soit chromatique\n' +
           '\n' +
           'Le bot réagira également si l\'un des mots suivant est détecté :\n' +
@@ -184,6 +191,48 @@ client.on('message', message => {
         })
 
       }
+    }
+
+    // API YouTube
+    if (message.content.toLowerCase().startsWith(prefix + 'ytb')) {
+
+      // Regarde si la commande possède un argument
+      let count = message.content.toLowerCase().split(' ').length
+
+      if (count >= 2) {
+
+        let keyword = message.content.toLowerCase().split(' ')[1]
+
+        Axios.get('https://www.googleapis.com/youtube/v3/search?key=' + api_youtube + '&channelId=' + dekuNoSekaiID + '&maxResults=' + maxResultYtb + '&q=' + keyword)
+          .then((response) => {
+            let idVideo = getRandomInt(response['data']['items'].length) + 1;
+            if (response['data']['items'].length != 0) {
+              message.channel.send('https://www.youtube.com/watch?v=' + response['data']['items'][idVideo]['id']['videoId'])
+            } else {
+              message.channel.send('Je n\'ai rien trouvé... :frowning:\nEssaie sans accent !!')
+            }
+          }, (response) => {
+            console.log('Erreur')
+          }
+        )
+
+      } else {
+
+        Axios.get('https://www.googleapis.com/youtube/v3/search?key=' + api_youtube + '&channelId=' + dekuNoSekaiID + '&maxResults=' + maxResultYtb)
+          .then((response) => {
+            let idVideo = getRandomInt(response['data']['items'].length) + 1;
+            if (response['data']['items'].length != 0) {
+              message.channel.send('https://www.youtube.com/watch?v=' + response['data']['items'][idVideo]['id']['videoId'])
+            } else {
+              message.channel.send('Je n\'ai rien trouvé... :frowning:\nEssaie sans accent !!')
+            }
+          }, (response) => {
+            console.log('Erreur')
+          }
+        )
+
+      }
+
     }
 
     // Commande avec mention(s)
