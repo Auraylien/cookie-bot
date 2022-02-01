@@ -57,9 +57,9 @@ client.on('message', message => {
           'sexe                       : commande spéciale pour AA\n' +
           'gif                        : envoie un gif aléatoire\n' +
           'gif <mot-clef>             : envoie un gif ayant comme tag mot-clef\n' +
-          'random <a,b,...,N>         : fait un choix au hasard entre a, b, ... et N' +
-          'ytb                        : envoie une vidéo au hasard de ma chaîne Youtube' +
-          'ytb <mot-clef>             : envoie une vidéo de ma chaîne en rapport avec le mot-clef' +
+          'random <a,b,...,N>         : fait un choix au hasard entre a, b, ... et N\n' +
+          'ytb                        : envoie une vidéo au hasard de ma chaîne Youtube\n' +
+          'ytb <mot-clef>             : envoie une vidéo de ma chaîne en rapport avec le mot-clef\n' +
           'pokemon                    : invoque un Pokémon au hasard parmis les 898 Pokémons (1G-8G). 1 chance sur 20 qu\'il soit chromatique\n' +
           '\n' +
           'Le bot réagira également si l\'un des mots suivant est détecté :\n' +
