@@ -118,27 +118,27 @@ client.on('message', message => {
 
         if (fabuleux == 1) {
           if (numShiny != 20) {
-            texte = 'Un fabuleux **' + pokemons[idPoke][14] + '** a été invoqué !';
+            texte = message.member.displayName + ' a invoqué un fabuleux **' + pokemons[idPoke][14] + '** !';
           } else {
-            texte = ':sparkles: Un fabuleux **' + pokemons[idPoke][14] + ' chromatique** a été invoqué ! :sparkles:';
+            texte = ':sparkles: ' + message.member.displayName + ' a invoqué un fabuleux **' + pokemons[idPoke][14] + ' chromatique** ! :sparkles:';
           }
         } else if (legendaire == 1) {
           if (numShiny != 20) {
-            texte = 'Un légendaire **' + pokemons[idPoke][14] + '** a été invoqué !';
+            texte = message.member.displayName +  ' a invoqué un légendaire **' + pokemons[idPoke][14] + '** !';
           } else {
-            texte = ':sparkles: Un légendaire **' + pokemons[idPoke][14] + ' chromatique** a été invoqué ! :sparkles:';
+            texte = ':sparkles: ' + message.member.displayName + ' a invoqué un légendaire **' + pokemons[idPoke][14] + ' chromatique** ! :sparkles:';
           }
         } else if (ultraChimere == 1) {
           if (numShiny != 20) {
-            texte = 'Une ultra-chimère **' + pokemons[idPoke][14] + '** a été invoquée !';
+            texte = message.member.displayName + ' a invoqué une ultra-chimère **' + pokemons[idPoke][14] + '** !';
           } else {
-            texte = ':sparkles: Une ultra-chimère **' + pokemons[idPoke][14] + ' chromatique** a été invoquée ! :sparkles:';
+            texte = ':sparkles: ' + message.member.displayName + ' a invoqué une ultra-chimère **' + pokemons[idPoke][14] + ' chromatique** ! :sparkles:';
           }
         } else {
           if (numShiny != 20) {
-            texte = 'Un **' + pokemons[idPoke][14] + '** a été invoqué !';
+            texte = message.member.displayName + ' a invoqué un **' + pokemons[idPoke][14] + '** !';
           } else {
-            texte = ':sparkles: Un **' + pokemons[idPoke][14] + ' chromatique** a été invoqué ! :sparkles:';
+            texte = ':sparkles: ' + message.member.displayName + ' a invoqué un **' + pokemons[idPoke][14] + ' chromatique** ! :sparkles:';
           }
         }
 
