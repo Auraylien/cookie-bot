@@ -7,6 +7,9 @@ const BotConfig = require('./bot_config.js')
 const connectionString = BotConfig.connectionString
 const clientDB = new Client({
   connectionString,
+  ssl: {
+    rejectUnauthorized: false,
+  }
 })
 
 clientDB.connect()
