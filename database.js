@@ -5,12 +5,25 @@ const { Client } = require('pg')
 const BotConfig = require('./bot_config.js')
 
 const connectionString = BotConfig.connectionString
-const clientDB = new Client({
-  connectionString,
-  ssl: {
-    rejectUnauthorized: false,
-  }
-})
+
+let clientDB;
+
+if (process.env.DATABASE_URL.split('@')[1].split(':')[0] === 'localhost') {
+
+  clientDB = new Client({
+    connectionString
+  })
+
+} else {
+
+  clientDB = new Client({
+    connectionString,
+    ssl: {
+      rejectUnauthorized: false,
+    }
+  })
+
+}
 
 clientDB.connect()
 clientDB.query('CREATE TABLE IF NOT EXISTS users (' +
@@ -33,8 +46,7 @@ function addCol(id, col, type, gain) {
     let query = 'SELECT * FROM users WHERE id=' + id + ';'
     clientDB.query(query).then(res => {
       let val;
-      console.log(res.rows[0])
-      if (type == 'int') {
+      if (type === 'int') {
         val = parseInt(res.rows[0][col])
       } else {
         val = parseFloat(res.rows[0][col])

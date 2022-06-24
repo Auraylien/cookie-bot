@@ -5,9 +5,11 @@ services:
   db:
     image: postgres:latest
     container_name: "cookie-bot-db"
+    ports:
+      - '5433:5432'
     environment:
-      POSTGRES_USER: <user>
-      POSTGRES_PASSWORD: <password>
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: cookie-bot
     networks:
       - cookie-bot

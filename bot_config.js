@@ -11,7 +11,7 @@ const connectionString = 'postgresql://<user>:<password>@<host><:port>/cookie-bo
 const maxResultYtb = 50 // 0-50
 
 // Pokémon config
-const nombrePokemons = 898
+const nombrePokemons = 905
 
 // Bot config
 const prefix = '?'

@@ -1,5 +1,5 @@
 // Import des librairies
-const { Client, MessageEmbed, Intents } = require('discord.js')
+const { Client, MessageEmbed, Intents, MessageAttachment} = require('discord.js')
 const Axios                             = require('axios')
 
 // Import des dépendances
@@ -32,6 +32,7 @@ discordClient.on('message', message => {
     // Commande classique sans mention
     if (message.mentions.users.size === 0) {
 
+      // ?regist : inscription d'un joueur dans la database
       if (message.content.toLocaleLowerCase().startsWith(BotConfig.prefix + 'register')) {
 
         let text = 'INSERT INTO users(id, timestamp, xp, balance, nb_caught, nb_shinies, nb_legendaries, nb_mythicals, nb_ultra_beasts) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
@@ -128,7 +129,10 @@ discordClient.on('message', message => {
           'random <a,b,...,N>         : fait un choix au hasard entre a, b, ... et N\n' +
           'ytb                        : envoie une vidéo au hasard de ma chaîne Youtube\n' +
           'ytb <mot-clef>             : envoie une vidéo de ma chaîne en rapport avec le mot-clef\n' +
-          'pokemon                    : invoque un Pokémon au hasard parmis les 898 Pokémons (1G-8G). 1 chance sur 20 qu\'il soit chromatique\n' +
+          'pokemon                    : invoque un Pokémon au hasard parmi les 905 Pokémons (1G-8G). 1 chance sur 20 qu\'il soit chromatique\n' +
+          'stats                      : affiche tes statistiques sur tes invocations de Pokémons\n' +
+          'xp                         : affiche ton XP accumulée avec les invocations de Pokémons\n' +
+          'bal                        : affiche tes Poképièces accumulées avec les invocations de Pokémons\n' +
           '\n' +
           'Le bot réagira également si l\'un des mots suivant est détecté :\n' +
           '- tabia\n' +
@@ -177,78 +181,234 @@ discordClient.on('message', message => {
       // Pokémon
       if (message.content.toLowerCase().startsWith(BotConfig.prefix + 'pokemon')) {
         let idPoke = Functions.getRandomInt(BotConfig.nombrePokemons) + 1;
-        let fabuleux = Pokemon.pokemons[idPoke][17];
-        let legendaire = Pokemon.pokemons[idPoke][18];
-        let ultraChimere = Pokemon.pokemons[idPoke][19];
+        let diffSexe = Pokemon.pokemons[idPoke][5];
+        let fabuleux = Pokemon.pokemons[idPoke][6];
+        let legendaire = Pokemon.pokemons[idPoke][7];
+        let ultraChimere = Pokemon.pokemons[idPoke][8];
+        let evolveTo = Pokemon.pokemons[idPoke][9];
+        let evolveFrom = Pokemon.pokemons[idPoke][10];
         let numShiny = Functions.getRandomInt(20) + 1;
+        let numSexe  = Functions.getRandomInt(2) + 1;
         let texte;
-        let now = parseInt(Date.now());
+        let now = parseInt(+Date.now()/1000);
         Database.getCol(message.author.id, 'timestamp').then((time) => {
-          
-          if (time == null || time <= now) {
 
+          if (time === "" || now >= time) {
+
+            let xp = 0;
+            let bal = 0;
+
+            // Le Pokémon est fabuleux
             if (fabuleux == 1) {
+
+              // Gestion des récompenses
+              xp = 500
+              bal = 1500
+
+              // On incrémente le compteur de fabuleux attrapés
               Database.addCol(message.author.id, 'nb_mythicals', 'int', 1)
+
+              // Si Pokémon chromatique, on incrémente le compteur des chromatiques et on
+              // octroie un bonus de 500 à l'XP et aux Poképièces
               if (numShiny != 20) {
-                texte = message.member.displayName + ' a invoqué un fabuleux **' + Pokemon.pokemons[idPoke][14] + '** !';
+                texte = message.member.displayName + ' a invoqué un fabuleux **' + Pokemon.pokemons[idPoke][2] + '** !';
+                Database.addCol(message.author.id, 'xp', 'int', xp)
+                Database.addCol(message.author.id, 'balance', 'float', bal)
               } else {
-                texte = ':sparkles: ' + message.member.displayName + ' a invoqué un fabuleux **' + Pokemon.pokemons[idPoke][14] + ' chromatique** ! :sparkles:';
+                texte = ':sparkles: ' + message.member.displayName + ' a invoqué un fabuleux **' + Pokemon.pokemons[idPoke][2] + ' chromatique** ! :sparkles:';
                 Database.addCol(message.author.id, 'nb_shinies', 'int', 1)
+                Database.addCol(message.author.id, 'xp', 'int', xp + 500)
+                Database.addCol(message.author.id, 'balance', 'float', bal + 500)
+                xp += 500
+                bal += 500
               }
+
+            // Le Pokémon est légendaire
             } else if (legendaire == 1) {
+
+              // Gestion des récompenses
+              xp = 350
+              bal = 1000
+
+              // On incrémente le compteur de légendaires attrapés
               Database.addCol(message.author.id, 'nb_legendaries', 'int', 1)
+
+              // Si Pokémon chromatique, on incrémente le compteur des chromatiques et on
+              // octroie un bonus de 200 à l'XP et aux Poképièces
               if (numShiny != 20) {
-                texte = message.member.displayName +  ' a invoqué un légendaire **' + Pokemon.pokemons[idPoke][14] + '** !';
+                texte = message.member.displayName +  ' a invoqué un légendaire **' + Pokemon.pokemons[idPoke][2] + '** !';
+                Database.addCol(message.author.id, 'xp', 'int', xp)
+                Database.addCol(message.author.id, 'balance', 'float', bal)
               } else {
-                texte = ':sparkles: ' + message.member.displayName + ' a invoqué un légendaire **' + Pokemon.pokemons[idPoke][14] + ' chromatique** ! :sparkles:';
+                texte = ':sparkles: ' + message.member.displayName + ' a invoqué un légendaire **' + Pokemon.pokemons[idPoke][2] + ' chromatique** ! :sparkles:';
                 Database.addCol(message.author.id, 'nb_shinies', 'int', 1)
+                Database.addCol(message.author.id, 'xp', 'int', xp + 200)
+                Database.addCol(message.author.id, 'balance', 'float', bal + 200)
+                xp += 200
+                bal += 200
               }
+
+            // Le Pokémon est une ultra-chimère
             } else if (ultraChimere == 1) {
+
+              // Gestion des récompenses
+              xp = 200
+              bal = 750
+
+              // On incrémente le compteur d'ultra-chimères attrapées
               Database.addCol(message.author.id, 'nb_ultra_beasts', 'int', 1)
+
+              // Si Pokémon chromatique, on incrémente le compteur des chromatiques et on
+              // octroie un bonus de 100 à l'XP et aux Poképièces
               if (numShiny != 20) {
-                texte = message.member.displayName + ' a invoqué une ultra-chimère **' + Pokemon.pokemons[idPoke][14] + '** !';
+                texte = message.member.displayName + ' a invoqué une ultra-chimère **' + Pokemon.pokemons[idPoke][2] + '** !';
+                Database.addCol(message.author.id, 'xp', 'int', xp)
+                Database.addCol(message.author.id, 'balance', 'float', bal)
               } else {
-                texte = ':sparkles: ' + message.member.displayName + ' a invoqué une ultra-chimère **' + Pokemon.pokemons[idPoke][14] + ' chromatique** ! :sparkles:';
+                texte = ':sparkles: ' + message.member.displayName + ' a invoqué une ultra-chimère **' + Pokemon.pokemons[idPoke][2] + ' chromatique** ! :sparkles:';
                 Database.addCol(message.author.id, 'nb_shinies', 'int', 1)
+                Database.addCol(message.author.id, 'xp', 'int', xp + 100)
+                Database.addCol(message.author.id, 'balance', 'float', bal + 100)
+                xp += 100
+                bal += 100
               }
+
+            // Le Pokémon est normal
             } else {
-              Database.addCol(message.author.id, 'nb_caught', 'int', 1)
-              if (numShiny != 20) {
-                texte = message.member.displayName + ' a invoqué un **' + Pokemon.pokemons[idPoke][14] + '** !';
+
+              // Pokémon sans évolution
+              if (evolveTo === "" && evolveFrom === "") {
+
+                xp = 10 + Functions.getRandomInt(30) + 1  // + [10-40] XP
+                bal = 10 + Functions.getRandomInt(30) + 1 // + [10-40] poképièces
+
+              // Pokémon évolution finale
+              } else if (evolveTo === "" && evolveFrom !== "") {
+
+                xp = 75 + Functions.getRandomInt(25) + 1  // + [75-100] XP
+                bal = 75 + Functions.getRandomInt(25) + 1 // + [75-100] poképièces
+
+              // Pokémon évolution intermédiaire
+              } else if (evolveTo !== "" && evolveFrom !== "") {
+
+                xp = 30 + Functions.getRandomInt(20) + 1  // + [30-50] XP
+                bal = 30 + Functions.getRandomInt(20) + 1 // + [30-50] poképièces
+
+              // Pokémon évolution de base
+              } else if (evolveTo !== "" && evolveFrom === "") {
+
+                xp = 5 + Functions.getRandomInt(20) + 1  // + [5-25] XP
+                bal = 5 + Functions.getRandomInt(20) + 1 // + [5-25] poképièces
+
+              // En cas d'erreur avec les if, on met 0 par défaut
               } else {
-                texte = ':sparkles: ' + message.member.displayName + ' a invoqué un **' + Pokemon.pokemons[idPoke][14] + ' chromatique** ! :sparkles:';
-                Database.addCol(message.author.id, 'nb_shinies', 'int', 1)
+
+                xp = 0
+                bal = 0
+
               }
+
+              // On incrémente le compteur de Pokémon attrapés
+              Database.addCol(message.author.id, 'nb_caught', 'int', 1)
+
+              // Si Pokémon chromatique, on incrémente le compteur des chromatiques et on
+              // octroie un bonus de 100 à l'XP et aux Poképièces
+              if (numShiny !== 20) {
+                texte = message.member.displayName + ' a invoqué un **' + Pokemon.pokemons[idPoke][2] + '** !';
+                Database.addCol(message.author.id, 'xp', 'int', xp)
+                Database.addCol(message.author.id, 'balance', 'float', bal)
+              } else {
+                texte = ':sparkles: ' + message.member.displayName + ' a invoqué un **' + Pokemon.pokemons[idPoke][2] + ' chromatique** ! :sparkles:';
+                Database.addCol(message.author.id, 'nb_shinies', 'int', 1)
+                Database.addCol(message.author.id, 'xp', 'int', xp + 100)
+                Database.addCol(message.author.id, 'balance', 'float', bal + 100)
+                xp += 100
+                bal += 100
+              }
+
             }
 
-            let timestamp = parseInt(now) + 300000;
+            // On met à jour le timestamp
+            let timestamp = parseInt(now) + 300;
             Database.setCol(message.author.id, 'timestamp', timestamp);
-  
-            if (numShiny != 20) {
-              message.channel.send({
-                content: texte,
-                files: [{
-                  attachment: 'img_poke/normal/' + parseInt(idPoke) + '.png',
-                  name: Pokemon.pokemons[idPoke][14] + '.png',
-                  description: 'Image du Pokémon ' + Pokemon.pokemons[idPoke][14]
-                }]
-              })
+
+            // Création des messages de l'embed
+            let textXp = "+" + xp + " XP"
+            let textBal = "+" + bal + " Poképièces"
+
+            // Création de la photo de l'embed
+            let photo
+            if (numShiny !== 20) {
+
+              // Si le Pokémon possède une différence en fonction du sexe, on adapte l'image
+              if (diffSexe === "1") {
+
+                if (numSexe === 1) {
+
+                  // Mâle
+                  photo = new MessageAttachment('./img_poke/normal/' + idPoke + '_m.png', idPoke + '.png');
+
+                } else {
+
+                  // Femelle
+                  photo = new MessageAttachment('./img_poke/normal/' + idPoke + '_f.png', idPoke + '.png');
+
+                }
+
+              } else {
+
+                // Aucune différence de sexe
+                photo = new MessageAttachment('./img_poke/normal/' + idPoke + '.png', idPoke + '.png');
+
+              }
+              
             } else {
-              message.channel.send({
-                content: texte,
-                files: [{
-                  attachment: 'img_poke/shiny/' + parseInt(idPoke) + '.png',
-                  name: Pokemon.pokemons[idPoke][14] + '.png',
-                  description: 'Image du Pokémon ' + Pokemon.pokemons[idPoke][14] + ' chromatique'
-                }]
-              })
+
+              // Si le Pokémon possède une différence en fonction du sexe, on adapte l'image
+              if (diffSexe === "1") {
+
+                if (numSexe === 1) {
+
+                  // Mâle
+                  photo = new MessageAttachment('./img_poke/shiny/' + idPoke + '_m.png', idPoke + '.png');
+
+                } else {
+
+                  // Femelle
+                  photo = new MessageAttachment('./img_poke/shiny/' + idPoke + '_f.png', idPoke + '.png');
+
+                }
+
+              } else {
+
+                // Aucune différence de sexe
+                photo = new MessageAttachment('./img_poke/shiny/' + idPoke + '.png', idPoke + '.png');
+
+              }
+              
             }
+
+            // Création de l'embed
+            let result = new MessageEmbed()
+              .setTitle("Invocation !")
+              .setDescription(texte)
+              .addFields(
+                { name: 'Gain d\'XP', value: textXp, inline: true },
+                { name: '\u200b', value: '\u200b', inline: true },
+                { name: 'Gain de Poképièces', value: textBal, inline: true }
+              )
+              .setImage('attachment://' + idPoke + '.png')
+            message.channel.send({ embeds: [result], files: [photo] })
   
           } else {
-            message.channel.send("Minute papillon ! Tu dois attendre un peu avant de réinvoquer un Pokémon !");
+
+            message.channel.send("Minute papillon ! Tu dois attendre <t:" + time + ":t> avant de réinvoquer un Pokémon !");
+
           }
+
         }).catch(e => {
-          message.channel.send("Une erreur est survenue dans la lecture de tes stats : as-tu effectué ton enregistrement avec `?register` ?")
+          // message.channel.send("Une erreur est survenue dans la lecture de tes stats : as-tu effectué ton enregistrement avec `?register` ?")
+          message.channel.send(e.message);
         })
       }
 
