@@ -17,8 +17,11 @@
   },
   "homepage": "https://github.com/Auraylien/cookie-bot#readme",
   "dependencies": {
+    "@discordjs/builders": "^1.1.0",
+    "@discordjs/rest": "^1.0.1",
     "axios": "^0.21.4",
-    "discord.js": "^13.6.0",
+    "discord-api-types": "^0.37.2",
+    "discord.js": "^13.10.2",
     "fast-csv": "^4.3.6",
     "fs": "0.0.1-security",
     "pg": "^8.7.3"

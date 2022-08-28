@@ -43,48 +43,40 @@ Pour qu'il puisse fonctionner, le bot nécessite certains tokens et clés d'API.
 dans le fichier `bot_config.js`.
 
 * `discordToken` : le token généré depuis le panneau des développeurs Discord, essentiel pour faire fonctionner le bot
+* `discordClientID` : le clientID de votre bot (disponible sur le panneau des développeurs Discord)
 * `giphyToken` : le token de Giphy pour pouvoir faire des appels à l'API Giphy et récupérer des GIF
 * `youtubeToken` : le token de Google (à générer sur le panneau des développeurs Google) pour utiliser l'API de YouTube
 * `youtubeChanelId` : l'identifiant de votre chaîne YouTube, pour utiliser l'API YouTube (trouvable dans YouTube Studio)
 * `connectionString` : le DSN de connexion à la base de données (à ne pas toucher une fois la config initiale effectuée)
 * `maxResultYtb` : nombre de résultats maximum retourné par l'API YouTube (compris entre 0 et 50)
 * `nombrePokemons` : nombre de Pokémons que vous pouvez invoquer avec le bot (**attention à ne pas aller au-delà de la limite du CSV**)
-* `prefix` : le préfixe pour utiliser les commandes (par défaut : `?`)
 
 # Commandes disponibles
 
-Toutes les commandes doivent être précédées du préfixe, qui est `?` par défaut.
+Toutes les commandes utilisent désormais la fonctionnalité d'interaction Discord avec les commandes slash (/).
 
 * `help` : affiche de l'aide sur le bot
 * `ping` : répond un message "pong", essentiellement pour tester si le bot fonctionne
-* `cookie` : permet de recevoir un cookie
 * `cookie @user` : offrir un cookie à quelqu'un
-* `cookie @vous` : vous offrir un cookie à vous-même
-* `cookie @user1 @user2 ...` : offre des cookies à tout le monde !
-* `avatar` : affiche votre avatar en grand
-* `avatar @user` : affiche l'avatar de quelqu'un d'autre
+* `avatar @user` : affiche l'avatar de quelqu'un
 * `gif` : envoie un GIF aléatoire
 * `gif <mot-clé>` : envoie un GIF relatif au mot-clé (enfin, presque)
-* `random <a,b,...,N>` : fait un choix au hasard entre a, b, ... et N
+* `random <1> <2> ... <10>` : fait un choix au hasard entre <1>, <2>, ... et <10> maximum
 * `ytb` : envoie une vidéo au hasard de la chaîne YouTube configurée
 * `ytb <mot-clé>` : envoie une vidéo de la chaîne YouTube configurée (enfin, presque)
-* `pokemon` : invoque un Pokémon au hasard parmi les 905 Pokémons (1G-8G), avec 1 chance sur 20 qu'il soit chromatique
-* `stats` : affiche les statistiques des invocations de Pokémons
-* `xp` : affiche l'XP accumulée pendant les invocations de Pokémons
-* `bal` : affiche les Poképièces accumulées avec les invocations de Pokémons
+* `pokemon` : mini-jeu d'invocation de Pokémon, comprenant les commandes :
+* * `register` : enregistrement pour utiliser les fonctions liées aux Pokémon
+* * `stats` : affiche tes statistiques sur tes invocations de Pokémon
+* * `xp` : affiche ton XP accumulée avec les invocations de Pokémon
+* * `bal` : affiche tes Poképièces accumulées avec les invocations de Pokémon
+* * `invocation` : invoque un Pokémon au hasard parmi les 905 Pokémon (1G-8G), avec 1 chance sur 20 qu'il soit chromatique
 
-\+ d'autres commandes plus spécifiques qui peuvent facilement être rajoutées.
-
-# Réactions du bot
-
-Le bot réagit aux messages s'ils contiennent les mots :
-* tabia
-* issou
-* funny boy
-* funny girl
+\+ d'autres commandes plus spécifiques qui peuvent facilement être rajoutées en suivant le schéma du fichier `index.js` pour les
+commandes déjà existantes.
 
 # Changelog
 
+* 3.0 - 28/08/2022 - Passage aux commandes Slash, suppression de certaines variantes de certaines commandes, suppression des réactions aux messages du bot, ajout d'une fonction de log des utilisations du bot
 * 2.0 - 19/07/2022 - Ajout de la gestion de l'XP et des Poképièces, images de Pokémon HOME, refonte du message d'invocation
 * 1.1 - 22/02/2022 - Mise à jour sur l'invocation des Pokémons
 * 1.0 - 31/01/2022 - Ajout de la fonctionnalité d'invocation des Pokémons
@@ -93,5 +85,5 @@ Le bot réagit aux messages s'ils contiennent les mots :
 
 ---
 
-Version du bot : 2.0  
-Date du README : 18/07/2022
+Version du bot : 3.0  
+Date du README : 28/08/2022

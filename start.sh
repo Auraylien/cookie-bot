@@ -1,3 +1,3 @@
 #!/bin/bash
 
-DATABASE_URL=postgresql://<user>:<password>@localhost:5433/cookie-bot node index.js
+DATABASE_URL=postgresql://<user>:<motdepasse>@<host>:<port>/<db> node index.js
