@@ -6,10 +6,11 @@ const { REST }                                             = require("@discordjs
 const Axios                                                = require('axios')
 
 // Import des dépendances
-const Functions = require('./functions.js')
-const BotConfig = require('./bot_config.js')
-const Pokemon   = require('./pokemon.js')
-const Database  = require('./database.js')
+const Functions   = require('./functions.js')
+const BotConfig   = require('./bot_config.js')
+const Pokemon     = require('./pokemon.js')
+const Database    = require('./database.js')
+const { generations } = require("./pokemon");
 
 // Création de l'instance du bot
 const discordClient = new Client({
@@ -432,6 +433,10 @@ discordClient.on('interactionCreate', async interaction => {
     if (interaction.options.getSubcommand() === 'invocation') {
       Functions.log(interaction.member.displayName, 'pokemon invocation')
       let idPoke = Functions.getRandomInt(BotConfig.nombrePokemons) + 1
+      let region = Pokemon.pokemons[idPoke][1]
+      let generation = Pokemon.generations[region]
+      let typeA = Pokemon.pokemons[idPoke][3]
+      let typeB = Pokemon.pokemons[idPoke][4]
       let diffSexe = Pokemon.pokemons[idPoke][5]
       let fabuleux = Pokemon.pokemons[idPoke][6]
       let legendaire = Pokemon.pokemons[idPoke][7]
@@ -584,6 +589,7 @@ discordClient.on('interactionCreate', async interaction => {
           Database.setCol(interaction.user.id, 'timestamp', timestamp)
 
           // Création des messages de l'embed
+          let textTypes = typeB === '' ? typeA : typeA + ' / ' + typeB
           let textXp = "+" + xp + " XP"
           let textBal = "+" + bal + " Poképièces"
 
@@ -644,6 +650,9 @@ discordClient.on('interactionCreate', async interaction => {
             .setTitle("Invocation !")
             .setDescription(texte)
             .addFields(
+              { name: 'Type(s)', value: textTypes, inline: true },
+              { name: 'Région', value: region, inline: true },
+              { name: 'Génération', value: generation, inline: true },
               { name: 'Gain d\'XP', value: textXp, inline: true },
               { name: '\u200b', value: '\u200b', inline: true },
               { name: 'Gain de Poképièces', value: textBal, inline: true }

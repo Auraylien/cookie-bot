@@ -76,12 +76,13 @@ commandes déjà existantes.
 
 # Changelog
 
-* 3.0 - 28/08/2022 - Passage aux commandes Slash, suppression de certaines variantes de certaines commandes, suppression des réactions aux messages du bot, ajout d'une fonction de log des utilisations du bot
-* 2.0 - 19/07/2022 - Ajout de la gestion de l'XP et des Poképièces, images de Pokémon HOME, refonte du message d'invocation
-* 1.1 - 22/02/2022 - Mise à jour sur l'invocation des Pokémons
-* 1.0 - 31/01/2022 - Ajout de la fonctionnalité d'invocation des Pokémons
-* 0.5 - 30/08/2021 - Ajout de diverses commandes
-* 0.0 - 01/05/2021 - Création du bot de base
+* 3.0.1 - 10/04/2023 - Ajout des secondes sur le message d'invocation des Pokémon, ajout d'informations lors de l'invocation d'un Pokémon
+* 3.0.0 - 28/08/2022 - Passage aux commandes Slash, suppression de certaines variantes de certaines commandes, suppression des réactions aux messages du bot, ajout d'une fonction de log des utilisations du bot
+* 2.0.0 - 19/07/2022 - Ajout de la gestion de l'XP et des Poképièces, images de Pokémon HOME, refonte du message d'invocation
+* 1.1.0 - 22/02/2022 - Mise à jour sur l'invocation des Pokémons
+* 1.0.0 - 31/01/2022 - Ajout de la fonctionnalité d'invocation des Pokémons
+* 0.5.0 - 30/08/2021 - Ajout de diverses commandes
+* 0.0.0 - 01/05/2021 - Création du bot de base
 
 ---
 
