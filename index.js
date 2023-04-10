@@ -350,7 +350,7 @@ discordClient.on('interactionCreate', async interaction => {
       Functions.log(interaction.member.displayName, 'pokemon register')
       let text = 'INSERT INTO users(id, timestamp, xp, balance, nb_caught, nb_shinies, nb_legendaries, nb_mythicals, nb_ultra_beasts) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *'
       let values = [interaction.user.id, null, 0, 0, 0, 0, 0, 0, 0]
-        
+
       Database.clientDB.query(text, values).then(res => {
         interaction.reply('Enregistrement effectué avec succès ! Tu peux désormais utiliser les fonctionnalités liées aux Pokémons !')
       }).catch(e => {
@@ -612,7 +612,7 @@ discordClient.on('interactionCreate', async interaction => {
               photo = new MessageAttachment('./img_poke/normal/' + idPoke + '.png', idPoke + '.png')
 
             }
-              
+
           } else {
 
             // Si le Pokémon possède une différence en fonction du sexe, on adapte l'image
@@ -636,7 +636,7 @@ discordClient.on('interactionCreate', async interaction => {
               photo = new MessageAttachment('./img_poke/shiny/' + idPoke + '.png', idPoke + '.png')
 
             }
-              
+
           }
 
           // Création de l'embed
@@ -650,10 +650,18 @@ discordClient.on('interactionCreate', async interaction => {
             )
             .setImage('attachment://' + idPoke + '.png')
           interaction.reply({ embeds: [result], files: [photo] })
-  
+
         } else {
 
-          interaction.reply('Minute papillon ! Tu dois attendre <t:' + time + ':t> avant de réinvoquer un Pokémon !')
+          const timeLeft = time - now
+          const minutesLeft = Math.trunc(timeLeft / 60)
+          const secondsLeft = timeLeft - (minutesLeft * 60)
+
+          if (minutesLeft === 0) {
+            interaction.reply('Seconde, papillon ! Tu dois encore attendre ' + secondsLeft + 's avant de réinvoquer un Pokémon. Patiente jusque <t:' + time + ':T> !')
+          } else {
+            interaction.reply('Minute, papillon ! Tu dois encore attendre ' + minutesLeft + 'm' + secondsLeft + 's avant de réinvoquer un Pokémon. Patiente jusque <t:' + time + ':T> !')
+          }
 
         }
 
