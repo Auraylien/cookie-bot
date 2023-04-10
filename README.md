@@ -86,5 +86,5 @@ commandes déjà existantes.
 
 ---
 
-Version du bot : 3.0  
-Date du README : 28/08/2022
+Version du bot : 3.0.1  
+Date du README : 10/04/2023
